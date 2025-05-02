@@ -1,46 +1,52 @@
 // src/components/pages/History.tsx
 
-import React, { useState } from 'react';
-import { WeightEntry } from '../utils/global';
+import React, { useEffect, useState } from 'react';
+import { getWeightEntries, getActivityEntries } from '../utils/firebaseHelper';
+import { WeightEntry, ActivityEntry } from '../utils/global';
+import { groupByWeek } from '../utils/dataHelper';
 
 const History: React.FC = () => {
-  // Données simulées pour l'instant
-  const [weights] = useState<WeightEntry[]>([
-    { date: '2025-04-20', weight: 76.8 },
-    { date: '2025-04-15', weight: 77.2 },
-    { date: '2025-04-08', weight: 78.5 },
-    { date: '2025-04-01', weight: 80 },
-  ]);
+  const [weights, setWeights] = useState<WeightEntry[]>([]);
+  const [activities, setActivities] = useState<ActivityEntry[]>([]);
 
-  const sorted = [...weights].sort((a, b) => b.date.localeCompare(a.date));
+  useEffect(() => {
+    const fetchData = async () => {
+      const w = await getWeightEntries();
+      const a = await getActivityEntries();
+      setWeights(w);
+      setActivities(a);
+    };
+    fetchData();
+  }, []);
+
+  const weightByWeek = groupByWeek(weights, 'weight');
+  const activityByWeek = groupByWeek(activities, 'duration', 'type');
 
   return (
-    <div>
-      <h2>Historique des poids</h2>
-      <table style={tableStyle}>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Poids (kg)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sorted.map((entry, idx) => (
-            <tr key={idx}>
-              <td>{entry.date}</td>
-              <td>{entry.weight}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="history-container">
+      <h1>Historique hebdomadaire</h1>
+
+      {Object.entries(weightByWeek).map(([week, data]) => {
+        const activity = activityByWeek[week] || {};
+        const weightStart = data[0];
+        const weightEnd = data[data.length - 1];
+        const delta = (weightEnd.value - weightStart.value).toFixed(1);
+
+        return (
+          <div key={week} className="week-summary">
+            <h3>{week}</h3>
+            <p>Poids : {weightStart.value}kg → {weightEnd.value}kg ({delta}kg)</p>
+            <ul>
+              {Object.entries(activity).map(([type, duration]) => (
+                <li key={type}>{`${type} : ${duration} min`}</li>
+
+              ))}
+            </ul>
+          </div>
+        );
+      })}
     </div>
   );
-};
-
-const tableStyle: React.CSSProperties = {
-  width: '100%',
-  borderCollapse: 'collapse',
-  marginTop: '1rem',
 };
 
 export default History;

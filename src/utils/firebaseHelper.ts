@@ -1,33 +1,58 @@
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
 import { WeightEntry, ActivityEntry } from './global';
+import { getAuth } from 'firebase/auth';
 
-// Ajout d'un poids
+// Ajout d'un poids dans /users/{uid}/weights
 export const addWeightEntry = async (entry: WeightEntry) => {
-  try {
-    await addDoc(collection(db, 'weights'), entry);
-  } catch (error) {
-    console.error('Erreur lors de l’ajout du poids :', error);
-  }
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (!user) throw new Error('Utilisateur non connecté');
+
+  await addDoc(collection(db, `users/${user.uid}/weights`), entry);
 };
 
 // Récupération des poids
 export const getWeightEntries = async (): Promise<WeightEntry[]> => {
-  const snapshot = await getDocs(collection(db, 'weights'));
-  return snapshot.docs.map((doc) => doc.data() as WeightEntry);
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (!user) throw new Error('Utilisateur non connecté');
+
+  const snapshot = await getDocs(collection(db, `users/${user.uid}/weights`));
+  return snapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      ...data,
+      date: typeof data.date === 'string'
+        ? data.date
+        : data.date.toDate().toISOString().slice(0, 10),
+    } as WeightEntry;
+  });
 };
 
-// Ajout d’une activité
+// Ajout d’une activité dans /users/{uid}/activities
 export const addActivityEntry = async (entry: ActivityEntry) => {
-  try {
-    await addDoc(collection(db, 'activities'), entry);
-  } catch (error) {
-    console.error('Erreur lors de l’ajout de l’activité :', error);
-  }
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (!user) throw new Error('Utilisateur non connecté');
+
+  await addDoc(collection(db, `users/${user.uid}/activities`), entry);
 };
 
 // Récupération des activités
 export const getActivityEntries = async (): Promise<ActivityEntry[]> => {
-  const snapshot = await getDocs(collection(db, 'activities'));
-  return snapshot.docs.map((doc) => doc.data() as ActivityEntry);
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (!user) throw new Error('Utilisateur non connecté');
+
+  const snapshot = await getDocs(collection(db, `users/${user.uid}/activities`));
+  return snapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      ...data,
+      date: typeof data.date === 'string'
+        ? data.date
+        : data.date.toDate().toISOString().slice(0, 10),
+    } as ActivityEntry;
+  });
 };

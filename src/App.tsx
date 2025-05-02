@@ -8,6 +8,7 @@ import History from './components/History';
 import Login from './components/Login';
 import Signin from './components/Signin';
 import PrivateRoute from './components/PrivateRoutes';
+import Account from './components/Account';
 import './App.css';
 
 const App: React.FC = () => {
@@ -35,6 +36,7 @@ const App: React.FC = () => {
               <>
                 <li><Link to="/">Accueil</Link></li>
                 <li><Link to="/history">Historique</Link></li>
+                <li><Link to="/account">Account</Link></li>
               </>
             )}
             {!user && (
@@ -53,6 +55,9 @@ const App: React.FC = () => {
             } />
             <Route path="/history" element={
               <PrivateRoute><History /></PrivateRoute>
+            } />
+            <Route path="/account" element={
+              <PrivateRoute><Account/></PrivateRoute>
             } />
             <Route path="/login" element={<Login />} />
             <Route path="/signin" element={<Signin />} />
