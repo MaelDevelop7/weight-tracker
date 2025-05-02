@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Poids+santé",
+  "name": "Application de suivi de santé et de poids",
   "icons": [
     {
       "src": "favicon.ico",
