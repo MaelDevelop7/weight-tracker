@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/weight-tracker/static/css/main.08908e49.css",
+    "main.js": "/weight-tracker/static/js/main.91e03906.js",
+    "static/js/453.c8334401.chunk.js": "/weight-tracker/static/js/453.c8334401.chunk.js",
+    "index.html": "/weight-tracker/index.html",
+    "main.08908e49.css.map": "/weight-tracker/static/css/main.08908e49.css.map",
+    "main.91e03906.js.map": "/weight-tracker/static/js/main.91e03906.js.map",
+    "453.c8334401.chunk.js.map": "/weight-tracker/static/js/453.c8334401.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.08908e49.css",
+    "static/js/main.91e03906.js"
+  ]
+}
