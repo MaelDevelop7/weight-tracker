@@ -47,11 +47,13 @@ const App: React.FC = () => {
 
       <main className="main-content">
         <Routes>
-          <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
-          <Route path="/history" element={<PrivateRoute><History /></PrivateRoute>} />
-          <Route path="/account" element={<PrivateRoute><Account /></PrivateRoute>} />
+        <Route path="/" element={<PrivateRoute user={user}><Home /></PrivateRoute>} />
+<Route path="/history" element={<PrivateRoute user={user}><History /></PrivateRoute>} />
+<Route path="/account" element={<PrivateRoute user={user}><Account /></PrivateRoute>} />
+
           <Route path="/login" element={<Login />} />
           <Route path="/signin" element={<Signin />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </div>
@@ -59,3 +61,7 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+export function NotFound() {
+  return <div>Page non trouvée</div>;
+}

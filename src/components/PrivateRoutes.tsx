@@ -6,6 +6,7 @@ import { getAuth } from 'firebase/auth';
 
 type Props = {
   children: JSX.Element;
+  user: any;
 };
 
 const PrivateRoute: React.FC<Props> = ({ children }) => {
